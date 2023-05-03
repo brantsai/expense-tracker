@@ -1,4 +1,4 @@
-const UserTable = ({ expenseData, setExpenseData, setUserModalToggle }) => {
+const UserTable = ({ expenseData, setExpenseData, openModal, handleDeleteRow }) => {
 
   const editUser = () => {
 
@@ -23,9 +23,11 @@ const UserTable = ({ expenseData, setExpenseData, setUserModalToggle }) => {
                 <td>{val.lastName}</td>
                 <td>{val.totalExpenses}</td>
                 <td><button onClick={() => {
-                  editUser(key);
+                  openModal();
                 }}>Edit User</button></td>
-                <td><button>Delete User</button></td>
+                <td><button onClick={() => {
+                  handleDeleteRow(key, 'users');
+                }}>Delete User</button></td>
               </tr>
             )
           })}
@@ -33,7 +35,7 @@ const UserTable = ({ expenseData, setExpenseData, setUserModalToggle }) => {
         <tfoot>
           <tr>
             <td><button onClick={() => {
-              setUserModalToggle(true);
+              openModal();
             }}>Add User</button></td>
           </tr>
         </tfoot>

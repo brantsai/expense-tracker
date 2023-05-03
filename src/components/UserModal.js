@@ -1,10 +1,10 @@
 import './Modal.css';
 
-const UserModal = ( {setUserModalToggle }) => {
+const UserModal = ( { closeModal }) => {
   return (  
     <div className="modal-container">
       <div className="modal">
-        <button onClick={() => setUserModalToggle(false)}>x</button>
+        <button onClick={() => closeModal()}>x</button>
         <h3>Add/Edit User</h3>
         <form>
           <div>
