@@ -17,6 +17,7 @@ const UserTable = ({ expenseData, setExpenseData, openModal, handleDeleteRow }) 
         </thead>
         <tbody>
           {Object.entries(expenseData.users).map(([key, val]) => {
+            // map through all users in dataset and list data
             return (
               <tr key={key}>
                 <td>{val.firstName}</td>

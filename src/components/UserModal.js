@@ -1,6 +1,25 @@
+import { useState } from 'react';
 import './Modal.css';
 
-const UserModal = ( { closeModal }) => {
+const UserModal = ( { closeModal, handleAddUser }) => {
+  const [formState, setFormState] = useState({
+    firstName: '',
+    lastName: '',
+  });
+
+  const handleChange = (e) => {
+    setFormState({
+      ...formState, 
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleAddUser(formState);
+    closeModal();
+  }
+
   return (  
     <div className="modal-container">
       <div className="modal">
@@ -8,14 +27,27 @@ const UserModal = ( { closeModal }) => {
         <h3>Add/Edit User</h3>
         <form>
           <div>
-            <label htmlFor="firstname">First Name: </label>
-            <input name="firstname" required="required"></input>
+            <label>First Name: </label>
+            <input
+              name="firstName" 
+              value={formState.firstName} 
+              required="required"
+              onChange={handleChange}
+            ></input>
           </div>
           <div>
-            <label htmlFor="lastname">Last Name: </label>
-            <input name="lastname" required="required"></input>
+            <label>Last Name: </label>
+            <input 
+              name="lastName"
+              value={formState.lastName}
+              required="required"
+              onChange={handleChange}
+            ></input>
           </div>
-          <button type="submit">Submit</button>
+          <button 
+            type="submit" 
+            onClick={handleSubmit}
+          >Submit</button>
         </form>
       </div>
     </div>
