@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './Modal.css';
 
-const UserModal = ( { closeModal, handleAddUser }) => {
-  const [formState, setFormState] = useState({
+const UserModal = ( { closeModal, handleAddEditUser, defaultValue }) => {
+  const [formState, setFormState] = useState(defaultValue || {
     firstName: '',
     lastName: '',
   });
@@ -16,7 +16,7 @@ const UserModal = ( { closeModal, handleAddUser }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleAddUser(formState);
+    handleAddEditUser(formState);
     closeModal();
   }
 

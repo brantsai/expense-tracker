@@ -6,6 +6,7 @@ import UserModal from './components/UserModal';
 function App() {
   const [userModalToggle, setUserModalToggle]  = useState(false);
   const [latestUserID, setLatestUserID] = useState(3);
+  const [userToEdit, setUserToEdit] = useState(null);
   const [expenseData, setExpenseData] = useState({
     // we are creating our data as a nested object with user, category, and expenses as properties
     users: { 
@@ -19,7 +20,7 @@ function App() {
       2: {
         firstName: 'Linda',
         lastName: 'Goh',
-        totalExpenses: 0,
+        totalExpenses: 100000,
         userID: 2,
       }
     },
@@ -38,6 +39,7 @@ function App() {
     },
   });
 
+  // this function deletes an entry from the users/expenses table
   const handleDeleteRow = (id, type) => {
     // delete the corresponding user or expense from the table based on its id
     setExpenseData((prevData) => {
@@ -47,21 +49,46 @@ function App() {
     });
   };
 
-  const handleAddUser = (newRow) => {
-    // default totalExpenses for new user to 0, set ID to current latest ID and add row to existing data
-    newRow = {
-      ...newRow, 
-      ['totalExpenses']: 0,
-      ['userID']: latestUserID
+  // this function adds a new user to the user table
+  const handleAddEditUser = (newRow) => {
+    
+    // check conditions to edit or add
+    if (userToEdit === null) {
+      // default totalExpenses for new user to 0, set ID to current latest ID and add row to existing data
+      newRow = {
+        ...newRow, 
+        ['totalExpenses']: 0,
+        ['userID']: latestUserID
+      }
+      
+      setExpenseData((prevData) => {
+        let newData = {...prevData};
+        newData['users'][latestUserID] = newRow;
+        return newData;
+      });
+  
+      // increment latest user id to prevent duplicate ids
+      setLatestUserID(latestUserID + 1);
+
+    } else { // edit selected user
+      newRow = {
+        ...newRow, 
+        ['totalExpenses']: expenseData['users'][userToEdit]['totalExpenses'],
+        ['userID']: userToEdit,
+      }
+
+      setExpenseData((prevData) => {
+        let newData = {...prevData};
+        newData['users'][userToEdit] = newRow;
+        setUserToEdit(null); // return user id state to null
+        return newData;
+      });
     }
+  }
 
-    setExpenseData((prevData) => {
-      let newData = {...prevData};
-      newData['users'][latestUserID] = newRow;
-      return newData;
-    });
-
-    setLatestUserID(latestUserID + 1);
+  const handleEditUser = (id) => {
+    setUserToEdit(id);
+    setUserModalToggle(true);
   }
 
   return (
@@ -73,6 +100,7 @@ function App() {
         openModal={() => {
           setUserModalToggle(true);
         }}
+        handleEditUser={handleEditUser}
         handleDeleteRow={handleDeleteRow}
       />
       {userModalToggle ? 
@@ -80,7 +108,8 @@ function App() {
           closeModal={() => {
             setUserModalToggle(false);
           }}
-          handleAddUser={handleAddUser}
+          handleAddEditUser={handleAddEditUser}
+          defaultValue={userToEdit != null && expenseData['users'][userToEdit]}
         /> 
         : null}
     </div>
