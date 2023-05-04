@@ -13,6 +13,7 @@ function App() {
   const [latestExpenseID, setLatestExpenseID] = useState(2);
   const [selectedUser, setSelectedUser] = useState(null);
   const [oldUser, setOldUser] = useState(null);
+  const [oldCategory, setOldCategory] = useState(null);
   const [selectedExpense, setSelectedExpense] = useState(null);
 
   // ** DATA MODEL ** /
@@ -26,17 +27,24 @@ function App() {
         lastName: 'Tsai',
         totalExpenses: 8,
         userID: 1,
-        expenses: [1], // user expenses are referenced in a list by expenseID
+        expenses: {
+          1: 8,
+        }, // user expenses are referenced in an object by expenseID with its cost value
       },
       2: {
         firstName: 'Linda',
         lastName: 'Goh',
         totalExpenses: 0,
         userID: 2,
+        expenses: {},
       }
     },
     categories: { 
-      'Food': [1] // expenses per category are referenced in a list by expenseID
+      'Food': {
+        1: 8,
+      },
+      'Travel': {},
+      'Equipment': {} // expenses per category are referenced in an object by expenseID
     },
     expenses: { //expenses are organized by expenseID for O(1) lookup
       1: {
@@ -122,15 +130,17 @@ function App() {
   };
 
   // this function sets the selected expense id and stores it in state for further use
-  const handleSelectExpense = (expenseID, userID) => {
+  const handleSelectExpense = (expenseID, userID, category) => {
     setSelectedExpense(expenseID);
-    setOldUser(userID)
+    setOldUser(userID);
+    setOldCategory(category);
     setExpenseModalToggle(true);
   }
 
   // this function adds or edits an expense in the expense table
   const handleAddEditExpense = (newRow) => {
     if (selectedExpense === null) {
+      // add new expense
       newRow = {
         ...newRow,
         ['userID']: selectedUser,
@@ -141,26 +151,39 @@ function App() {
         let newData = {...prevData};
         newData['expenses'][latestExpenseID] = newRow;
         newData['users'][selectedUser]['totalExpenses'] += Number(newRow['cost']); // add expense cost to user's total expenses
+        
+        newData['users'][selectedUser]['expenses'][latestExpenseID] = newRow['cost']; // add selected expense to user's expenses
+
+        // add selected expense to category expenses
+        newData['categories'][newRow['category']][latestExpenseID] = newRow['cost'];
+
         setLatestExpenseID(latestExpenseID + 1); // increment latest expense id to remove duplicate id's
         setSelectedUser(null); // reset selected user state since we don't need the user id anymore
         return newData;
       })
-    } else {
+    } else { // edit selected expense
       newRow = {
         ...newRow,
         ['userID']: selectedUser || oldUser,
         ['expenseID']: selectedExpense,
       };
 
-      console.log(newRow)
-
       setExpenseData((prevData) => {
         let newData = {...prevData};
         newData['expenses'][selectedExpense] = newRow;
+
         // subtract old amount from old user, add new amount to new user
-        console.log(oldUser, selectedUser)
         newData['users'][oldUser]['totalExpenses'] -= Number(expenseData['expenses'][selectedExpense]['cost']);
         newData['users'][selectedUser || oldUser]['totalExpenses'] += Number(newRow['cost']);
+
+        // remove selected expense from old user, add to new user
+        delete newData['users'][oldUser]['expenses'][selectedExpense];
+        newData['users'][selectedUser]['expenses'][selectedExpense] = newRow['cost'];
+
+        // remove selected expense from old category, add to new category
+        delete newData['categories'][oldCategory][selectedExpense];
+        newData['categories'][newRow['category']][selectedExpense] = newRow['cost'];
+
         setSelectedExpense(null);
         setSelectedUser(null);
         return newData;

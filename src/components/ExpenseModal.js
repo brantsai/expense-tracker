@@ -15,7 +15,7 @@ const ExpenseModal = ({ defaultValue, selectedUser, expenseData, setSelectedExpe
       setSelectedUser(userID);
       setFormState({
         ...formState,
-        [e.target.name]: expenseData['users'][userID]
+        [e.target.name]: expenseData['users'][userID]['firstName'] + ' ' + expenseData['users'][userID]['lastName']
       })
     } else {
       setFormState({

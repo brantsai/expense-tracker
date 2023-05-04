@@ -20,7 +20,7 @@ const ExpenseTable = ({ expenseData, handleDeleteExpense, handleSelectExpense, o
                 <td>{val.description}</td>
                 <td>{val.cost}</td>
                 <td><button onClick={() => {
-                  handleSelectExpense(key, val.userID);
+                  handleSelectExpense(key, val.userID, val.category);
                 }}>Edit Expense</button></td>
                 <td><button onClick={() => {
                   handleDeleteExpense(key);
