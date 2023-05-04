@@ -65,7 +65,15 @@ function App() {
     // delete the selected user from the table based on its id
     setExpenseData((prevData) => {
       let newData = {...prevData};
+      
+      // iterate through all user's expenses and delete expenses
+      for (let expenseID in newData['users'][id]['expenses']) {
+        delete newData['categories'][newData['expenses'][expenseID]['category']][expenseID];
+        delete newData['expenses'][expenseID];
+      }
+
       delete newData['users'][id];
+
       return newData;
     });
   };
@@ -122,9 +130,12 @@ function App() {
     const userID = expenseData['expenses'][id]['userID'];
     const expenseCost = expenseData['expenses'][id]['cost']; 
 
+    // delete expenses from user and category data as well
     setExpenseData((prevData) => {
       let newData = {...prevData};
       newData['users'][userID]['totalExpenses'] -= expenseCost;
+      delete newData['users'][userID]['expenses'][id];
+      delete newData['categories'][newData['expenses'][id]['category']][id];
       delete newData['expenses'][id];
       return newData;
     });
