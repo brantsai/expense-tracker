@@ -4,9 +4,11 @@ import UserTable from './components/UserTable';
 import UserModal from './components/UserModal';
 import CompanyExpenseTable from './components/CompanyExpenseTable';
 import ExpenseTable from './components/ExpenseTable';
+import ExpenseModal from './components/ExpenseModal';
 
 function App() {
   const [userModalToggle, setUserModalToggle]  = useState(false);
+  const [expenseModalToggle, setExpenseModalToggle] = useState(false);
   const [latestUserID, setLatestUserID] = useState(3);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -139,7 +141,18 @@ function App() {
       <ExpenseTable 
         expenseData={expenseData}
         handleDeleteExpense={handleDeleteExpense}
+        openModal={() => {
+          setExpenseModalToggle(true);
+        }}
       />
+      {expenseModalToggle ? 
+        <ExpenseModal 
+          expenseData={expenseData}
+          closeModal={() => {
+            setExpenseModalToggle(false);
+          }}
+        />
+        : null}
       <CompanyExpenseTable expenseData={expenseData}/>
     </div>
   );
