@@ -40,7 +40,7 @@ const ExpenseModal = ({ defaultValue, selectedUser, expenseData, setSelectedExpe
           closeModal();
         }}>x</button>
         <h3>Add/Edit Expense</h3>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
             <label>Full Name: </label>
             <select name="fullName" onChange={handleChange}>
@@ -82,7 +82,6 @@ const ExpenseModal = ({ defaultValue, selectedUser, expenseData, setSelectedExpe
           </div>
           <button 
             type="submit"
-            onClick={handleSubmit}
           >Submit</button>
         </form>
       </div>

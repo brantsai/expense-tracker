@@ -39,12 +39,13 @@ function App() {
         expenses: {},
       }
     },
+     // expenses per category are referenced in an object by expenseID
     categories: { 
-      'Food': {
+      'Food': { 
         1: 8,
       },
       'Travel': {},
-      'Equipment': {} // expenses per category are referenced in an object by expenseID
+      'Equipment': {}
     },
     expenses: { //expenses are organized by expenseID for O(1) lookup
       1: {
@@ -54,7 +55,7 @@ function App() {
         cost: 8,
         userID: 1,
         expenseID: 1,
-      }
+      },
     }
   });
 

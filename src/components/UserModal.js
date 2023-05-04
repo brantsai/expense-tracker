@@ -28,15 +28,15 @@ const UserModal = ( { closeModal, setSelectedUser, handleAddEditUser, defaultVal
           setSelectedUser(null);
         }}>x</button>
         <h3>Add/Edit User</h3>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div>
             <label>First Name: </label>
             <input
               name="firstName" 
               type="text"
               value={formState.firstName} 
-              required="required"
               onChange={handleChange}
+              required
             ></input>
           </div>
           <div>
@@ -45,13 +45,12 @@ const UserModal = ( { closeModal, setSelectedUser, handleAddEditUser, defaultVal
               name="lastName"
               type="text"
               value={formState.lastName}
-              required="required"
               onChange={handleChange}
+              required
             ></input>
           </div>
           <button 
             type="submit" 
-            onClick={handleSubmit}
           >Submit</button>
         </form>
       </div>
