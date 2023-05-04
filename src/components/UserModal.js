@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Modal.css';
 
-const UserModal = ( { closeModal, handleAddEditUser, defaultValue }) => {
+const UserModal = ( { closeModal, setSelectedUser, handleAddEditUser, defaultValue }) => {
   const [formState, setFormState] = useState(defaultValue || {
     firstName: '',
     lastName: '',
@@ -23,7 +23,10 @@ const UserModal = ( { closeModal, handleAddEditUser, defaultValue }) => {
   return (  
     <div className="modal-container">
       <div className="modal">
-        <button onClick={() => closeModal()}>x</button>
+        <button onClick={() => {
+          closeModal();
+          setSelectedUser(null);
+        }}>x</button>
         <h3>Add/Edit User</h3>
         <form>
           <div>

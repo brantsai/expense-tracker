@@ -12,6 +12,8 @@ function App() {
   const [latestUserID, setLatestUserID] = useState(3);
   const [latestExpenseID, setLatestExpenseID] = useState(2);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [oldUser, setOldUser] = useState(null);
+  const [selectedExpense, setSelectedExpense] = useState(null);
 
   // ** DATA MODEL ** /
 
@@ -38,6 +40,7 @@ function App() {
     },
     expenses: { //expenses are organized by expenseID for O(1) lookup
       1: {
+        fullName: 'Brandon Tsai',
         category: 'Food',
         description: 'Pizza',
         cost: 8,
@@ -118,22 +121,52 @@ function App() {
     });
   };
 
+  // this function sets the selected expense id and stores it in state for further use
+  const handleSelectExpense = (expenseID, userID) => {
+    setSelectedExpense(expenseID);
+    setOldUser(userID)
+    setExpenseModalToggle(true);
+  }
+
   // this function adds or edits an expense in the expense table
   const handleAddEditExpense = (newRow) => {
-    newRow = {
-      ...newRow,
-      ['userID']: selectedUser,
-      ['expenseID']: latestExpenseID,
+    if (selectedExpense === null) {
+      newRow = {
+        ...newRow,
+        ['userID']: selectedUser,
+        ['expenseID']: latestExpenseID,
+      };
+  
+      setExpenseData((prevData) => {
+        let newData = {...prevData};
+        newData['expenses'][latestExpenseID] = newRow;
+        newData['users'][selectedUser]['totalExpenses'] += Number(newRow['cost']); // add expense cost to user's total expenses
+        setLatestExpenseID(latestExpenseID + 1); // increment latest expense id to remove duplicate id's
+        setSelectedUser(null); // reset selected user state since we don't need the user id anymore
+        return newData;
+      })
+    } else {
+      newRow = {
+        ...newRow,
+        ['userID']: selectedUser || oldUser,
+        ['expenseID']: selectedExpense,
+      };
+
+      console.log(newRow)
+
+      setExpenseData((prevData) => {
+        let newData = {...prevData};
+        newData['expenses'][selectedExpense] = newRow;
+        // subtract old amount from old user, add new amount to new user
+        console.log(oldUser, selectedUser)
+        newData['users'][oldUser]['totalExpenses'] -= Number(expenseData['expenses'][selectedExpense]['cost']);
+        newData['users'][selectedUser || oldUser]['totalExpenses'] += Number(newRow['cost']);
+        setSelectedExpense(null);
+        setSelectedUser(null);
+        return newData;
+      })
     }
 
-    setExpenseData((prevData) => {
-      let newData = {...prevData};
-      newData['expenses'][latestExpenseID] = newRow;
-      newData['users'][selectedUser]['totalExpenses'] += Number(newRow['cost']); // add expense cost to user's total expenses
-      setLatestExpenseID(latestExpenseID + 1); // increment latest expense id to remove duplicate id's
-      setSelectedUser(null); // reset selected user state since we don't need the user id anymore
-      return newData;
-    })
   }
 
   return (
@@ -142,11 +175,11 @@ function App() {
       <UserTable 
         expenseData={expenseData} 
         setExpenseData={setExpenseData} 
+        handleSelectUser={handleSelectUser}
+        handleDeleteUser={handleDeleteUser}
         openModal={() => {
           setUserModalToggle(true);
         }}
-        handleSelectUser={handleSelectUser}
-        handleDeleteUser={handleDeleteUser}
       />
       {userModalToggle ? 
         <UserModal 
@@ -155,11 +188,13 @@ function App() {
           }}
           handleAddEditUser={handleAddEditUser}
           defaultValue={selectedUser != null && expenseData['users'][selectedUser]}
+          setSelectedUser={setSelectedUser}
         /> 
         : null}
       <ExpenseTable 
         expenseData={expenseData}
         handleDeleteExpense={handleDeleteExpense}
+        handleSelectExpense={handleSelectExpense}
         openModal={() => {
           setExpenseModalToggle(true);
         }}
@@ -171,7 +206,10 @@ function App() {
             setExpenseModalToggle(false);
           }}
           setSelectedUser={setSelectedUser}
+          setSelectedExpense={setSelectedExpense}
+          selectedUser={selectedUser}
           handleAddEditExpense={handleAddEditExpense}
+          defaultValue={selectedExpense != null && expenseData['expenses'][selectedExpense]}
         />
         : null}
       <CompanyExpenseTable expenseData={expenseData}/>

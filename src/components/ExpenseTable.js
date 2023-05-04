@@ -1,4 +1,4 @@
-const ExpenseTable = ({ expenseData, handleDeleteExpense, openModal }) => {
+const ExpenseTable = ({ expenseData, handleDeleteExpense, handleSelectExpense, openModal }) => {
   return (
     <div>
       <h2>Expense Table</h2>
@@ -20,7 +20,7 @@ const ExpenseTable = ({ expenseData, handleDeleteExpense, openModal }) => {
                 <td>{val.description}</td>
                 <td>{val.cost}</td>
                 <td><button onClick={() => {
-                  // openModal(); SHOULD BE SELECT EXPENSE
+                  handleSelectExpense(key, val.userID);
                 }}>Edit Expense</button></td>
                 <td><button onClick={() => {
                   handleDeleteExpense(key);

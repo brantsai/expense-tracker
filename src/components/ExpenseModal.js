@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-const ExpenseModal = ({ expenseData, closeModal, setSelectedUser, handleAddEditExpense }) => {
-  const [formState, setFormState] = useState({
+const ExpenseModal = ({ defaultValue, selectedUser, expenseData, setSelectedExpense, closeModal, setSelectedUser, handleAddEditExpense }) => {
+  const [formState, setFormState] = useState(defaultValue || {
     fullName: 'Brandon Tsai',
     category: 'Food',
     description: '',
@@ -35,6 +35,7 @@ const ExpenseModal = ({ expenseData, closeModal, setSelectedUser, handleAddEditE
     <div className="modal-container">
       <div className="modal">
         <button onClick={() => {
+          setSelectedExpense(null);
           setSelectedUser(null);
           closeModal();
         }}>x</button>
@@ -43,6 +44,7 @@ const ExpenseModal = ({ expenseData, closeModal, setSelectedUser, handleAddEditE
           <div>
             <label>Full Name: </label>
             <select name="fullName" onChange={handleChange}>
+              <option value="Select">Select User</option>
               {Object.entries(expenseData.users).map(([key, val]) => {
                 return (
                   <option 
@@ -54,6 +56,7 @@ const ExpenseModal = ({ expenseData, closeModal, setSelectedUser, handleAddEditE
             </select><br></br>
             <label>Category: </label>
             <select name="category" onChange={handleChange}>
+              <option value="Select">Select Category</option>
               <option value="Food">Food</option>
               <option value="Travel">Travel</option>
               <option value="Equipment">Equipment</option>
@@ -61,7 +64,8 @@ const ExpenseModal = ({ expenseData, closeModal, setSelectedUser, handleAddEditE
             <label>Description: </label>
             <input
               type="text"
-              name="description" 
+              name="description"
+              value={formState.description}
               required="required"
               onChange={handleChange}
             ></input>
@@ -71,6 +75,7 @@ const ExpenseModal = ({ expenseData, closeModal, setSelectedUser, handleAddEditE
             <input 
               type="number"
               name="cost"
+              value={formState.cost}
               required="required"
               onChange={handleChange}
             ></input>
