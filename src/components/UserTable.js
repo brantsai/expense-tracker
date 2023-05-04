@@ -12,7 +12,7 @@ const UserTable = ({ expenseData, openModal, handleDeleteRow, handleEditUser }) 
           <tr>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Total Expenses</th>
+            <th>Total Expenses ($)</th>
           </tr>
         </thead>
         <tbody>

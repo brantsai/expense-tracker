@@ -2,6 +2,8 @@ import './App.css';
 import React, { useState } from 'react';
 import UserTable from './components/UserTable';
 import UserModal from './components/UserModal';
+import CompanyExpenseTable from './components/CompanyExpenseTable';
+import ExpenseTable from './components/ExpenseTable';
 
 function App() {
   const [userModalToggle, setUserModalToggle]  = useState(false);
@@ -16,6 +18,15 @@ function App() {
         lastName: 'Tsai',
         totalExpenses: 0,
         userID: 1,
+        expenses: { // user expenses are organized by expenseID
+          1: { 
+            category: 'Food',
+            description: 'Pizza',
+            cost: '8',
+            userID: 1,
+            expenseID: 1,
+          }
+        },
       },
       2: {
         firstName: 'Linda',
@@ -24,19 +35,18 @@ function App() {
         userID: 2,
       }
     },
-    categories: [],
-    expenses: { // expenses are also organized by expenseID
-      1: 
-      { 1:
+    categories: { 
+      'Food': { // expenses per category are stored according to expenseID
+        1: 
           {
-            userID: 1,
             category: 'Food',
             description: 'Pizza',
-            cost: '8',
+            cost: 8,
+            userID: 1,
             expenseID: 1,
           }
-      }
-    },
+        }
+      },
   });
 
   // this function deletes an entry from the users/expenses table
@@ -48,6 +58,12 @@ function App() {
       return newData;
     });
   };
+  
+  // this function sets the selected user id to edit and stores it in state for further use
+  const handleEditUser = (id) => {
+    setUserToEdit(id);
+    setUserModalToggle(true);
+  }
 
   // this function adds a new user to the user table
   const handleAddEditUser = (newRow) => {
@@ -86,11 +102,6 @@ function App() {
     }
   }
 
-  const handleEditUser = (id) => {
-    setUserToEdit(id);
-    setUserModalToggle(true);
-  }
-
   return (
     <div>
       <h1>Expense Tracker</h1>
@@ -112,6 +123,8 @@ function App() {
           defaultValue={userToEdit != null && expenseData['users'][userToEdit]}
         /> 
         : null}
+      <ExpenseTable expenseData={expenseData}/>
+      <CompanyExpenseTable expenseData={expenseData}/>
     </div>
   );
 }
