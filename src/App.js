@@ -9,6 +9,9 @@ function App() {
   const [userModalToggle, setUserModalToggle]  = useState(false);
   const [latestUserID, setLatestUserID] = useState(3);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  // ** DATA MODEL ** /
+
   const [expenseData, setExpenseData] = useState({
     // we are creating our data as a nested object with user, category, and expenses as properties
     users: { 
@@ -100,11 +103,16 @@ function App() {
 
   // this function deletes an expense from the table based on selected id
   const handleDeleteExpense = (id) => {
+    // when deleting an expense, the expense cost is subtracted from the user's total expenses
+    const userID = expenseData['expenses'][id]['userID'];
+    const expenseCost = expenseData['expenses'][id]['cost'];
+
     setExpenseData((prevData) => {
       let newData = {...prevData};
+      newData['users'][userID]['totalExpenses'] -= expenseCost;
       delete newData['expenses'][id];
       return newData;
-    })
+    });
   }
 
   return (
