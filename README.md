@@ -1,70 +1,16 @@
-# Getting Started with Create React App
+Expense Tracker by Brandon Tsai
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
+How to Run Program:
 
 ### `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Summary:
 
-### `npm test`
+In this project, I created a single page Expense Tracker application which allows your to add, edit, and delete users as well as expenses. Each expense is tracked by category as well as by the user who made the expense, and keeps track of total company expenses even when there are changes made within the data. Any changes within one table persists between the two other tables, and all data is stored within the app in a data structure.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+I chose to use React as my framework for this application as it is very efficient in rendering UI components, and would allow for a smooth user experience for anybody who uses the application. React also allows for the use of state management, which I felt would be very useful for a project like this, where I would have to constantly manage data and application state and pass them between components. React's component based architechture makes it easy to break down and organize the different parts of the single-paged application, allowing for better code readability, and the ability to reuse components (although I did not reuse any components in this project, in the future I would clean up the code to allow the modal component to be reusable for both the user and expense tables).
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+One of the biggest decisions I had to make during this project was deciding on the structure of the data model used for the application. I chose to use an object with 3 main nested objects: users, categories, and expenses. Each expense was stored within the expenses object, as well as being referenced within the users and categories by its expense ID. The users object was also organized by user ID as well. The main purpose of this is to take advantage of the O(1) lookup that objects have, which is extremely important when dealing with large data sets. Instead of iteratingg through the entire code base to find a specific user or expense, we can grab the data directly by referencing its corresponding ID in constant time. The tradeoff of using such a complex nested data structure is that performing functions on deeply nested items causes the code to be quite complicated and may impact the overall readability of the code itself. However, I believe the tradeoff is worth it because the difference between an O(1) and O(n) operation can be massive especially when dealing with large code bases with millions of data points.
