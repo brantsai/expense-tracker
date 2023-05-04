@@ -1,4 +1,4 @@
-const UserTable = ({ expenseData, openModal, handleDeleteRow, handleEditUser }) => {
+const UserTable = ({ expenseData, openModal, handleDeleteUser, handleSelectUser }) => {
 
   const editUser = () => {
 
@@ -24,10 +24,10 @@ const UserTable = ({ expenseData, openModal, handleDeleteRow, handleEditUser }) 
                 <td>{val.lastName}</td>
                 <td>{val.totalExpenses}</td>
                 <td><button onClick={() => {
-                  handleEditUser(key);
+                  handleSelectUser(key);
                 }}>Edit User</button></td>
                 <td><button onClick={() => {
-                  handleDeleteRow(key, 'users');
+                  handleDeleteUser(key);
                 }}>Delete User</button></td>
               </tr>
             )

@@ -8,7 +8,7 @@ import ExpenseTable from './components/ExpenseTable';
 function App() {
   const [userModalToggle, setUserModalToggle]  = useState(false);
   const [latestUserID, setLatestUserID] = useState(3);
-  const [userToEdit, setUserToEdit] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [expenseData, setExpenseData] = useState({
     // we are creating our data as a nested object with user, category, and expenses as properties
     users: { 
@@ -16,60 +16,54 @@ function App() {
       1: {
         firstName: 'Brandon',
         lastName: 'Tsai',
-        totalExpenses: 0,
+        totalExpenses: 8,
         userID: 1,
-        expenses: { // user expenses are organized by expenseID
-          1: { 
-            category: 'Food',
-            description: 'Pizza',
-            cost: '8',
-            userID: 1,
-            expenseID: 1,
-          }
-        },
+        expenses: [1], // user expenses are referenced in a list by expenseID
       },
       2: {
         firstName: 'Linda',
         lastName: 'Goh',
-        totalExpenses: 100000,
+        totalExpenses: 0,
         userID: 2,
       }
     },
     categories: { 
-      'Food': { // expenses per category are stored according to expenseID
-        1: 
-          {
-            category: 'Food',
-            description: 'Pizza',
-            cost: 8,
-            userID: 1,
-            expenseID: 1,
-          }
-        }
-      },
+      'Food': [1] // expenses per category are referenced in a list by expenseID
+    },
+    expenses: { //expenses are organized by expenseID for O(1) lookup
+      1: {
+        category: 'Food',
+        description: 'Pizza',
+        cost: 8,
+        userID: 1,
+        expenseID: 1,
+      }
+    }
   });
 
-  // this function deletes an entry from the users/expenses table
-  const handleDeleteRow = (id, type) => {
-    // delete the corresponding user or expense from the table based on its id
+  // ** USER TABLE FUNCTIONS ** //
+
+  // this function deletes an entry from the users table
+  const handleDeleteUser = (id) => {
+    // delete the selected user from the table based on its id
     setExpenseData((prevData) => {
       let newData = {...prevData};
-      delete newData[type][id];
+      delete newData['users'][id];
       return newData;
     });
   };
   
-  // this function sets the selected user id to edit and stores it in state for further use
-  const handleEditUser = (id) => {
-    setUserToEdit(id);
+  // this function sets the selected user id and stores it in state for further use
+  const handleSelectUser = (id) => {
+    setSelectedUser(id);
     setUserModalToggle(true);
   }
 
-  // this function adds a new user to the user table
+  // this function edits a user or adds a new user to the user table
   const handleAddEditUser = (newRow) => {
     
     // check conditions to edit or add
-    if (userToEdit === null) {
+    if (selectedUser === null) {
       // default totalExpenses for new user to 0, set ID to current latest ID and add row to existing data
       newRow = {
         ...newRow, 
@@ -89,17 +83,28 @@ function App() {
     } else { // edit selected user
       newRow = {
         ...newRow, 
-        ['totalExpenses']: expenseData['users'][userToEdit]['totalExpenses'],
-        ['userID']: userToEdit,
+        ['totalExpenses']: expenseData['users'][selectedUser]['totalExpenses'],
+        ['userID']: selectedUser,
       }
 
       setExpenseData((prevData) => {
         let newData = {...prevData};
-        newData['users'][userToEdit] = newRow;
-        setUserToEdit(null); // return user id state to null
+        newData['users'][selectedUser] = newRow;
+        setSelectedUser(null); // return user id state to null
         return newData;
       });
     }
+  }
+
+  // ** EXPENSE TABLE FUNCTIONS ** //
+
+  // this function deletes an expense from the table based on selected id
+  const handleDeleteExpense = (id) => {
+    setExpenseData((prevData) => {
+      let newData = {...prevData};
+      delete newData['expenses'][id];
+      return newData;
+    })
   }
 
   return (
@@ -111,8 +116,8 @@ function App() {
         openModal={() => {
           setUserModalToggle(true);
         }}
-        handleEditUser={handleEditUser}
-        handleDeleteRow={handleDeleteRow}
+        handleSelectUser={handleSelectUser}
+        handleDeleteUser={handleDeleteUser}
       />
       {userModalToggle ? 
         <UserModal 
@@ -120,10 +125,13 @@ function App() {
             setUserModalToggle(false);
           }}
           handleAddEditUser={handleAddEditUser}
-          defaultValue={userToEdit != null && expenseData['users'][userToEdit]}
+          defaultValue={selectedUser != null && expenseData['users'][selectedUser]}
         /> 
         : null}
-      <ExpenseTable expenseData={expenseData}/>
+      <ExpenseTable 
+        expenseData={expenseData}
+        handleDeleteExpense={handleDeleteExpense}
+      />
       <CompanyExpenseTable expenseData={expenseData}/>
     </div>
   );

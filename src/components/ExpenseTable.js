@@ -1,4 +1,4 @@
-const ExpenseTable = ({ expenseData }) => {
+const ExpenseTable = ({ expenseData, handleDeleteExpense }) => {
   return (
     <div>
       <h2>Expense Table</h2>
@@ -12,8 +12,26 @@ const ExpenseTable = ({ expenseData }) => {
           </tr>
         </thead>
         <tbody>
-          {}
+          {Object.entries(expenseData.expenses).map(([key, val]) => {
+            return (
+              <tr key={key}>
+                <td>{expenseData['users'][val.userID]['firstName'] + ' ' + expenseData['users'][val.userID]['lastName']}</td>
+                <td>{val.category}</td>
+                <td>{val.description}</td>
+                <td>{val.cost}</td>
+                <td><button>Edit Expense</button></td>
+                <td><button onClick={() => {
+                  handleDeleteExpense(key);
+                }}>Delete Expense</button></td>
+              </tr>
+            )
+          })}
         </tbody>
+        <tfoot>
+          <tr>
+            <td><button>Add Expense</button></td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   );
