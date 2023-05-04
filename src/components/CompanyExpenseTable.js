@@ -1,6 +1,10 @@
 const CompanyExpenseTable = ( { expenseData }) => {
-  const renderTotalCost = () => {
-    
+  const renderTotalCost = (category) => {
+    let total = 0;
+    Object.values(expenseData['categories'][category]).map((expense) => {
+      total += Number(expense);
+    })
+    return total;
   }
 
   return (  
@@ -14,7 +18,18 @@ const CompanyExpenseTable = ( { expenseData }) => {
           </tr>
         </thead>
         <tbody>
-
+          <tr>
+            <th>Food</th>
+            <th>{renderTotalCost('Food')}</th>
+          </tr>
+          <tr>
+            <th>Travel</th>
+            <th>{renderTotalCost('Travel')}</th>
+          </tr>
+          <tr>
+            <th>Equipment</th>
+            <th>{renderTotalCost('Equipment')}</th>
+          </tr>
         </tbody>
       </table>
     </div>

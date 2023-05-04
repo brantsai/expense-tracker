@@ -85,7 +85,8 @@ function App() {
       newRow = {
         ...newRow, 
         ['totalExpenses']: 0,
-        ['userID']: latestUserID
+        ['userID']: latestUserID,
+        ['expenses']: {},
       }
       
       setExpenseData((prevData) => {
@@ -119,7 +120,7 @@ function App() {
   const handleDeleteExpense = (id) => {
     // when deleting an expense, the expense cost is subtracted from the user's total expenses
     const userID = expenseData['expenses'][id]['userID'];
-    const expenseCost = expenseData['expenses'][id]['cost'];
+    const expenseCost = expenseData['expenses'][id]['cost']; 
 
     setExpenseData((prevData) => {
       let newData = {...prevData};
