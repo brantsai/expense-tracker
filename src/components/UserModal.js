@@ -30,6 +30,7 @@ const UserModal = ( { closeModal, handleAddEditUser, defaultValue }) => {
             <label>First Name: </label>
             <input
               name="firstName" 
+              type="text"
               value={formState.firstName} 
               required="required"
               onChange={handleChange}
@@ -39,6 +40,7 @@ const UserModal = ( { closeModal, handleAddEditUser, defaultValue }) => {
             <label>Last Name: </label>
             <input 
               name="lastName"
+              type="text"
               value={formState.lastName}
               required="required"
               onChange={handleChange}

@@ -10,6 +10,7 @@ function App() {
   const [userModalToggle, setUserModalToggle]  = useState(false);
   const [expenseModalToggle, setExpenseModalToggle] = useState(false);
   const [latestUserID, setLatestUserID] = useState(3);
+  const [latestExpenseID, setLatestExpenseID] = useState(2);
   const [selectedUser, setSelectedUser] = useState(null);
 
   // ** DATA MODEL ** /
@@ -115,6 +116,24 @@ function App() {
       delete newData['expenses'][id];
       return newData;
     });
+  };
+
+  // this function adds or edits an expense in the expense table
+  const handleAddEditExpense = (newRow) => {
+    newRow = {
+      ...newRow,
+      ['userID']: selectedUser,
+      ['expenseID']: latestExpenseID,
+    }
+
+    setExpenseData((prevData) => {
+      let newData = {...prevData};
+      newData['expenses'][latestExpenseID] = newRow;
+      newData['users'][selectedUser]['totalExpenses'] += Number(newRow['cost']); // add expense cost to user's total expenses
+      setLatestExpenseID(latestExpenseID + 1); // increment latest expense id to remove duplicate id's
+      setSelectedUser(null); // reset selected user state since we don't need the user id anymore
+      return newData;
+    })
   }
 
   return (
@@ -151,6 +170,8 @@ function App() {
           closeModal={() => {
             setExpenseModalToggle(false);
           }}
+          setSelectedUser={setSelectedUser}
+          handleAddEditExpense={handleAddEditExpense}
         />
         : null}
       <CompanyExpenseTable expenseData={expenseData}/>

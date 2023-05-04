@@ -20,7 +20,7 @@ const ExpenseTable = ({ expenseData, handleDeleteExpense, openModal }) => {
                 <td>{val.description}</td>
                 <td>{val.cost}</td>
                 <td><button onClick={() => {
-                  openModal();
+                  // openModal(); SHOULD BE SELECT EXPENSE
                 }}>Edit Expense</button></td>
                 <td><button onClick={() => {
                   handleDeleteExpense(key);
@@ -31,7 +31,9 @@ const ExpenseTable = ({ expenseData, handleDeleteExpense, openModal }) => {
         </tbody>
         <tfoot>
           <tr>
-            <td><button>Add Expense</button></td>
+            <td><button onClick={() => {
+              openModal();
+            }}>Add Expense</button></td>
           </tr>
         </tfoot>
       </table>
